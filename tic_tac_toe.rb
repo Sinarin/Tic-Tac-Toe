@@ -60,6 +60,8 @@ class Player < Game
       return true
     elsif (@@board[0][2] == @team && @@board[1][1] == @team && @@board[2][0] == @team)
       return true
+    elsif @@board.all?{|row| row.all?{|column| column != " "}}
+      tie
     else
       return false
     end
@@ -85,6 +87,8 @@ class Player < Game
     if anwser == "y" || anwser == "yes"
       @@board = [[" ", " ", " "], [" ", " ", " "], [" ", " ", " "]]
       start_game()
+    else
+      exit
     end
   end
 
