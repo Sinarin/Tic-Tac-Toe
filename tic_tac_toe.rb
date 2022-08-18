@@ -1,5 +1,5 @@
 
-
+#create and print board
 class Game
   @@board = [[" ", " ", " "], [" ", " ", " "], [" ", " ", " "]]
 
@@ -8,6 +8,7 @@ class Game
   end
 end
 
+#allows creation of two players
 class Player < Game
   attr_accessor :oppenent, :board
   @@win = false
