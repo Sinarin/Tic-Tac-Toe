@@ -1,15 +1,15 @@
-board = [[" ", " ", " "], [" ", " ", " "], [" ", " ", " "]]
+
 
 class Game
   @@board = [[" ", " ", " "], [" ", " ", " "], [" ", " ", " "]]
 
   def print_board
-    #TODO
+    @@board.each{|row| p row}
   end
 end
 
 class Player < Game
-  attr_accessor :oppenent
+  attr_accessor :oppenent, :board
   @@win = false
   @@player = 1
   def initialize(name = "Player #{@@player}", team)
@@ -24,17 +24,21 @@ class Player < Game
 
   
   def place_piece
-    puts "#{@name} What row would you like to place #{@team}"
-    row = gets.chomp.to_i - 1
-    puts "#{@name} What column would you like to place #{@team}"
-    column = gets.chomp.to_i - 1
-    @@board[row][column] = @team
-    print_board()
-    @@win = check_win()
-    if @@win
-      win()
+    ask_row()
+    ask_column()
+    if @@board[@row][@column] == " "
+      @@board[@row][@column] = @team
+      print_board()
+      @@win = check_win()
+      if @@win
+        win()
+      else
+        @oppenent.place_piece
+      end
     else
-      @oppenent.place_piece
+      puts "This spot is already occupied, choose an open space"
+      print_board()
+      self.place_piece()
     end
   end
   
@@ -52,9 +56,9 @@ class Player < Game
       end
     end
   
-    if @@board[0][0] == @team && @@board[1][1] == @team && @@board[2][2] = @team
+    if (@@board[0][0] == @team && @@board[1][1] == @team && @@board[2][2] == @team)
       return true
-    elsif @@board[0][2] == @team && @@board[1][1] == @team && @@board[2][0] = @team
+    elsif (@@board[0][2] == @team && @@board[1][1] == @team && @@board[2][0] == @team)
       return true
     else
       return false
@@ -65,8 +69,47 @@ class Player < Game
   def win
     puts "#{@name} Wins!"
     sleep 1
-    puts "Would you like to play again?"
-  
+    replay
+  end
+
+  private
+  def tie
+    puts "Cats Game (Tie!)"
+    sleep 1
+    replay
+  end
+  private
+  def replay
+    puts "Would you like to play again? (y/n)" 
+    anwser = gets.chomp.downcase
+    if anwser == "y" || anwser == "yes"
+      @@board = [[" ", " ", " "], [" ", " ", " "], [" ", " ", " "]]
+      start_game()
+    end
+  end
+
+  private
+  def ask_row
+    puts "#{@name} What row would you like to place #{@team}? (1, 2, 3)"
+    @row = gets.chomp.to_i
+    unless @row == 1 || @row == 2 || @row ==3
+      puts "Invalid input please input 1, 2, or 3."
+      ask_row()
+    else
+      @row -= 1
+    end
+
+  end
+  private
+  def ask_column
+    puts "#{@name} What column would you like to place #{@team}? (1, 2, 3)"
+    @column = gets.chomp.to_i
+    unless @column == 1 || @column == 2 || @column == 3
+      puts "Invalid input please input 1, 2, or 3."
+      ask_column()
+    else
+      @column -= 1
+    end
   end
 
 end
